@@ -54,3 +54,108 @@ and the like to make sure none of my servers is behaving erratically.
 $ $ ansible -i hosts.ini example -a "free -h" -u [username]
 
 ```
+
+
+## Headless Windows Vagrant Server Setup
+
+Purpose: Convert a Windows 10 machine into a dedicated, headless virtualization host for local Ansible testing, managed entirely via SSH from a macOS client.
+
+### Phase 1: Windows Host Preparation
+
+1- Enable Hardware Virtualization: * Ensure VT-x/AMD-V is enabled in the Windows machine's BIOS.
+
+2- Verify via Task Manager > Performance > CPU (Virtualization: Enabled).
+
+3- Install OpenSSH Server:
+
+Open PowerShell as Administrator.
+
+Run: 
+
+```bash
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+```
+
+4- Generate Host Keys: In the Administrator PowerShell window, force the SSH server to generate its internal identity keys:
+
+```bash
+ssh-keygen.exe -A
+```
+
+5- Start and Persist the Service:
+
+```bash
+Start-Service sshd
+Set-Service -Name sshd -StartupType 'Automatic'
+```
+
+### Install Virtualization Tooling
+
+Install VirtualBox and Vagrant:
+
+```bash
+winget install Oracle.VirtualBox
+winget install Hashicorp.Vagrant
+```
+Note: 
+
+Mandatory Reboot: Restart the Windows laptop entirely to sync Vagrant's environmental variables with VirtualBox.
+
+### Client Connection & Security Lockdown
+
+1- Generate Client Keys in the first machine(where the magic of ansible happens):
+
+```bash
+ssh-keygen -t ed25519
+```
+
+2- Transfer Public Key:
+
+```bash
+ssh-copy-id windows_user@windows_ip_addr
+```
+
+3- Disable Password Authentication (The Security Layer):
+
+SSH into the Windows machine:
+
+```bash
+ ssh duden@192.168.43.96
+```
+
+4- Open the SSH configuration file as an Administrator. In the Windows terminal, run:
+
+```bash
+powershell -Command "Start-Process notepad 'C:\ProgramData\ssh\sshd_config' -Verb RunAs"
+```
+
+Find the line #PasswordAuthentication yes, change it to PasswordAuthentication no, and remove the #. Save and close Notepad. Restart the SSH service to lock the doors:
+
+```bash
+powershell -Command "Restart-Service sshd"
+```
+
+### Provisioning the Sandbox
+
+1- Create the Workspace:
+
+From your first machine, SSH into the now-secured Windows host:
+
+```bash
+ssh duden@192.168.43.96
+mkdir ansible-chap2
+cd ansible-chap2
+```
+
+2- Initialize and Boot:
+
+```bash
+vagrant init geerlingguy/rockylinux8
+vagrant up
+```
+
+3- Retrieve SSH Config for Ansible:
+
+```bash
+vagrant ssh-config
+```
