@@ -159,3 +159,31 @@ vagrant up
 ```bash
 vagrant ssh-config
 ```
+
+## Your first Ansible playbook:
+
+Let’s create the Ansible playbook.yml file:
+
+```bash
+$ touch playbook.yml
+```
+
+and paste this in the playbook.yml:
+
+```bash
+- hosts: all
+  become: yes
+
+- tasks:
+  - name: Ensure chrony (for time synchronization) is installed.
+    dnf: 
+     name: chrony
+     state: present
+
+  - name: Ensure chrony is running.
+    service:
+      name: chronyd
+      state: started
+      enabled: yes
+    
+```
