@@ -25,7 +25,7 @@ $ ls -la -ssh
 ## How to add ssh key to a server:
 
 ```bash
-$ ssh-copy-id -i ~/.ssh/id.ed25519.pub [ip-address-of-the-server]
+$ ssh-copy-id -i ~/.ssh/id.ed25519.pub [user]@[ip-address-of-the-server]
 
 # after this cmd to check if it's added to the servers's ssh dir you can type:
 
