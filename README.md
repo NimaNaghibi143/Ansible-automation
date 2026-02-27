@@ -32,6 +32,10 @@ $ ssh-copy-id -i ~/.ssh/id.ed25519.pub [user]@[ip-address-of-the-server]
 $ ls -la .ssh
 
 # -i basically means "input file"
+
+# To connect to your server using the key you just created and put in the target server(s):
+
+$ ssh ~/.ssh/ansible [ip-address-of-the-server]
 ```
 
 
