@@ -38,9 +38,59 @@ $ ls -la .ssh
 $ ssh ~/.ssh/ansible [ip-address-of-the-server]
 ```
 
+## If you have added passphrase for the ssh-key yo have created:
 
+If you don't want to type every time you are going to ssh the server you can use SSH-Agents. 
+the ssh-agent is basically a process that runs in the background and can cache your passphrase.
 
+```bash
+$ eval $(ssh-agent)
 
+# The response would be sth like this:
+
+$ Agent pid 2342
+
+# To ensure that the ssh-agent is running in the background you can use the following cmd:
+
+$ ps aux | grep 2342
+
+# Now the following instructions are going to set the passphrase in the agent and the agent insert the passphrase for you everytime you are going to ssh to the server.
+
+$ ssh add
+
+# resposne:
+
+$ Enter passphrase or /home/user/.ssh/id_23432:
+
+# after this ssh-agent config you ca ssh to the target server with ease:). but the downside is that when you close or kill that specific terminal the agent will be shutdown.
+and you are going to do the steps again! but i think that's fine because we are going to do that only once each time.
+
+```
+
+## Note we can use the following trick to make our own custom cmd for making the agent:
+
+```bash
+
+$ alias [name-of-the-custom-command]='eval $(ssh-agent) && ssh-add'
+
+# basically with the above cmd you have built a cmds named [name-of-the-custom-command]
+
+```
+
+Note: but this way after you kill or close the terminal you are going to lose the alias as well!!
+but don't worry what you can do for this matter is that you can use a text editor like nano for example:
+
+```bash
+
+# open your .bashrc file and there you can add your alias.
+
+$ nano .bashrc
+
+# in there you can add the following:
+
+$ alias ssh-agent='eval $(ssh agent) && ssh-add'
+
+```
 
 ## Chapter 1: Creating a basic inventory file
 
