@@ -303,3 +303,48 @@ $ ansible all --key-file ~/.ssh/ansible-test -i inventroy -m ping
 it's going to make a connection to the host(s) in the inventory file.
 
 ```
+
+if you see sth like this:
+
+```bash
+
+178.16.143.29 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3.12"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+
+# this means that ansible was able to make conn with remote server(s).
+```
+
+ok the next step to reduce the time for typing all these long cmds we are going to do two things:
+
+1- we are going to use "just" which a fairly fast and simple and convinient cmd runner.
+2- we are going to add some reusable configs and vars in the "ansible.cfg" file.
+
+```bash
+# Let's install just using brew installer:
+
+$ brew install just
+
+
+# then let's make a ansible.cfg file:
+
+$ nano ansible.cfg
+
+# put these into the ansible.cfg:
+[defaults]
+inventory = inventory 
+private_key_file = ~/.ssh/ansible-test
+
+# In the justfile:
+
+default:
+	@just --list # to list all the available cmds
+
+ping:
+	uv run ansible all -m ping -u root 
+
+```
