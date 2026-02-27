@@ -279,3 +279,27 @@ and paste this in the playbook.yml:
       enabled: yes
     
 ```
+
+
+## Let's run some basic commands:
+
+First make a simple inventory file:
+
+```bash
+
+$ nano inventroy 
+
+# then add your host nams/ ip addresses in there and save it.
+
+```
+
+
+```bash
+# This basic command is going to test that if everything is actually working!
+
+$ ansible all --key-file ~/.ssh/ansible-test -i inventroy -m ping
+
+# -m is simpliy means what module we are going to use in the cmd. and this cmd is not going to just pind the target machine it's more thant that
+it's going to make a connection to the host(s) in the inventory file.
+
+```
