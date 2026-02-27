@@ -1,5 +1,43 @@
 # Ansible-automation 
 
+## Let's learn about some concepts: 
+
+### The first concept and one of the most important ones is OPEN SSH:
+
+OPEN SSH is the default and the standard when it comes to remote administration in linux.
+we use this to connect to a linux server and run cmds and configuration. and this is what ansible uses for the remote server provisioning.
+for this journy we need to know what ssh is? and we need to do some basic key management.
+
+### SSH key management makes the connections much more secure!
+
+```bash
+$ ssh-keygen -t ed25519 -C "My first ssh key"
+
+# the -t tells what type of ssh key we want to generate.
+# -C is like a meta data about the key. 
+# Usually it is recomended to use passphrase for more security.
+
+# To see SSH directory:
+$ ls -la -ssh
+
+# to see the contents of the public/private key use CAT command.
+```
+## How to add ssh key to a server:
+
+```bash
+$ ssh-copy-id -i ~/.ssh/id.ed25519.pub [ip-address-of-the-server]
+
+# after this cmd to check if it's added to the servers's ssh dir you can type:
+
+$ ls -la .ssh
+
+# -i basically means "input file"
+```
+
+
+
+
+
 ## Chapter 1: Creating a basic inventory file
 
 Ansible uses an inventory file (basically, a list of servers) to communicate with your servers.
